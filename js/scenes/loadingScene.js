@@ -42,10 +42,21 @@ loadingScene.preload = function () {
         progressBar.fillRect(0, 0, (barW*value), barH);
 
     },this);
+    
+    // LOAD ASSETS
+    this.load.image('bg', 'assets/images/bg.png');
+    // btn
+    this.load.image('btn', 'assets/images/btn.png');
 
-
-    for (let i = 0; i < 500; i++) {
-        this.load.image('test'+i, 'assets/images/candy.png');
+    // load 36 photos
+    let i = 0;
+    for (let iga = 0; iga < 6; iga++) {
+        for (let fitz = 1; fitz < 7; fitz++) {
+            i++;
+            if (i < 10) i = '0'+i;
+            this.load.image('p'+fitz+''+iga, 'assets/images/p10_Page_'+i+'.png');
+            //console.log(i);
+        }
     }
 };
 
