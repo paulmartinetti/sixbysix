@@ -50,7 +50,7 @@ loadingScene.preload = function () {
 
     // load 36 photos
     let i = 0;
-    for (let iga = 0; iga < 6; iga++) {
+    for (let iga = 0; iga < 5; iga++) {
         for (let fitz = 1; fitz < 7; fitz++) {
             i++;
             if (i < 10) i = '0'+i;

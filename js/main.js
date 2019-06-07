@@ -8,7 +8,7 @@ let config = {
   width: 1440,
   height: 900,
   scene: [bootScene, loadingScene, homeScene, gameScene],
-  title: 'Six by six',
+  title: 'Six by five',
   pixelArt: false,
   backgroundColor: '000000'
 };

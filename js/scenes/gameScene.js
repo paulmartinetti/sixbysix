@@ -11,7 +11,7 @@ gameScene.init = function () {
     this.btnH = 53;
 
     this.curPhoto = 0;
-    this.iga = 3;
+    this.iga = 2;
     this.fitz = 3;
 
 };
@@ -67,7 +67,7 @@ gameScene.nextPhoto = function () {
     if (this.iga < 1) {
         this.t_btn.visible = false;
     }
-    if (this.iga > 4) {
+    if (this.iga > 3) {
         this.b_btn.visible = false;
     }
     if (this.fitz < 2) {
