@@ -23,6 +23,7 @@ gameScene.init = function () {
     this.endY = 0;
 
     this.swipemin = 200;
+    this.level = 1;
 
     this.ready = false;
 
@@ -75,7 +76,11 @@ gameScene.nav = function (dx, dy) {
         return;
     }
 
-    diffX < 0 ? this.fitz++ : this.fitz--;
+    if (diffX < 0) {
+        this.fitz++;
+    } else {
+        this.fitz--;
+    }
 
     // check bounds
     if (this.fitz < 1) {
@@ -99,6 +104,7 @@ gameScene.nav = function (dx, dy) {
     for (let i = 0; i < 6; i++) {
         this.xs[i] += (this.incX * xdir);
     }
+    console.log(this.xs);
 
     // load photo at 0,0
     let j = 0;
@@ -108,6 +114,8 @@ gameScene.nav = function (dx, dy) {
                 // get loaded and named image, e.g. p10
                 let imagename = this.photos[j];
                 imagename.x = imagename.y = 0;
+                this.level++;
+                imagename.setDepth(this.level);
                 return;
             }
             j++;
