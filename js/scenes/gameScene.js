@@ -7,16 +7,25 @@ gameScene.init = function () {
     this.gameW = this.sys.game.config.width;
     this.gameH = this.sys.game.config.height;
 
+    // iga is 0 to 4
     this.iga = 0;
+    // FitzPatrick skin types are 1 to 6
     this.fitz = 1;
 
+    // width of one photo
     this.incX = 1440;
+    // height of one photo
     this.incY = 900;
 
+    // set of x / fitz coordinates of photo grid
     this.xs = [];
+    // set of y / iga coordinates of grid
     this.ys = [];
-    this.photos = [];
+    // image sprites are loaded into this array
+    // use to update displayed photo coordinates and depth
+    this.photosA = [];
 
+    // for swipe input
     this.startX = 0;
     this.startY = 0;
     this.endX = 0;
@@ -25,6 +34,7 @@ gameScene.init = function () {
     this.swipemin = 200;
     this.level = 1;
 
+    // swipe listerners otherwise start on homeScene click
     this.ready = false;
 
 };
@@ -33,20 +43,23 @@ gameScene.init = function () {
 gameScene.create = function () {
 
     // create starting x and y coordinate arrays
-    for (let vy = 0; vy < 5; vy++) {
-        this.ys.push(this.incY * vy);
-    }
+    // fitz
     for (let vx = 0; vx < 6; vx++) {
         this.xs.push(this.incX * vx);
     }
+    // iga
+    for (let vy = 0; vy < 5; vy++) {
+        this.ys.push(this.incY * vy);
+    }
 
-    // position all 30 images using start coordinates
+    // add all 30 images using start coordinates
     for (let iga = 0; iga < 5; iga++) {
         for (let fitz = 0; fitz < 6; fitz++) {
             // get loaded and named image, e.g. p10
             let imagename = 'p' + (fitz + 1) + iga;
             // add to stage using coordinate arrays
             let temp = this.add.sprite(this.xs[fitz], this.ys[iga], imagename, 0).setOrigin(0, 0).setInteractive();
+            // make interactive to allow nav
             temp.on('pointerdown', function (pointer) {
                 this.startX = Math.round(pointer.downX);
                 this.startY = Math.round(pointer.downY);
@@ -54,21 +67,19 @@ gameScene.create = function () {
             temp.on('pointerup', function (pointer) {
                 this.nav(Math.round(pointer.upX), Math.round(pointer.upY));
             }, this);
-            // make interactive to allow nav
-            this.photos.push(temp);
+            // store each to access for updates
+            this.photosA.push(temp);
         }
     }
 };
 // called on pointerup
 gameScene.nav = function (dx, dy) {
 
-    // prevent run from home screen click
+    // prevent run from homeScene click
     if (!this.ready) {
         this.ready = true;
         return;
     }
-
-    /*** check bounds and update x  ***/
 
     // confirm purposeful swipe
     let diffX = dx - this.startX;
@@ -76,7 +87,7 @@ gameScene.nav = function (dx, dy) {
     if (Math.abs(diffX) < this.swipemin && Math.abs(diffY) < this.swipemin) {
         return;
     }
-
+    // start with x / fitz
     if (Math.abs(diffX) > this.swipemin) {
         if (diffX < 0) {
             this.fitz++;
@@ -86,11 +97,13 @@ gameScene.nav = function (dx, dy) {
 
         // check bounds
         if (this.fitz < 1) {
+            // no change
             this.fitz = 1;
         } else if (this.fitz > 6) {
+            // no change
             this.fitz = 6;
         } else {
-            // okay to swipe left
+            // okay to swipe left or right
             let xdir = 0;
             if (diffX < 0) {
                 xdir = -1;
@@ -134,18 +147,22 @@ gameScene.nav = function (dx, dy) {
         }
     }
 
-    // load photo at 0,0
+    // ready to update photo based on swipe
     let j = 0;
+    // next row
     for (let iga = 0; iga < 5; iga++) {
+        // next column
         for (let fitz = 0; fitz < 6; fitz++) {
+            // load photo on top whose coordinates are now 0,0
             if (this.xs[fitz] == 0 && this.ys[iga] == 0) {
                 // get loaded and named image, e.g. p10
-                let imagename = this.photos[j];
+                let imagename = this.photosA[j];
                 imagename.x = imagename.y = 0;
                 this.level++;
                 imagename.setDepth(this.level);
                 return;
             }
+            // photos are stored linearly, one row at a time
             j++;
         }
     }
