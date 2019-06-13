@@ -62,6 +62,7 @@ gameScene.create = function () {
 // called on pointerup
 gameScene.nav = function (dx, dy) {
 
+    // prevent run from home screen click
     if (!this.ready) {
         this.ready = true;
         return;
@@ -71,40 +72,67 @@ gameScene.nav = function (dx, dy) {
 
     // confirm purposeful swipe
     let diffX = dx - this.startX;
-
-    if (Math.abs(diffX) < this.swipemin) {
+    let diffY = dy - this.startY;
+    if (Math.abs(diffX) < this.swipemin && Math.abs(diffY) < this.swipemin) {
         return;
     }
 
-    if (diffX < 0) {
-        this.fitz++;
-    } else {
-        this.fitz--;
+    if (Math.abs(diffX) > this.swipemin) {
+        if (diffX < 0) {
+            this.fitz++;
+        } else {
+            this.fitz--;
+        }
+
+        // check bounds
+        if (this.fitz < 1) {
+            this.fitz = 1;
+        } else if (this.fitz > 6) {
+            this.fitz = 6;
+        } else {
+            // okay to swipe left
+            let xdir = 0;
+            if (diffX < 0) {
+                xdir = -1;
+            } else {
+                xdir = 1;
+            }
+            // update x values
+            for (let i = 0; i < 6; i++) {
+                this.xs[i] += (this.incX * xdir);
+            }
+        }
     }
 
-    // check bounds
-    if (this.fitz < 1) {
-        this.fitz = 1;
-        return;
-    }
-    if (this.fitz > 6) {
-        this.fitz = 6;
-        return;
-    }
+    // vertical swipe
+    if (Math.abs(diffY) > this.swipemin) {
+        if (diffY < 0) {
+            this.iga++;
+        } else {
+            this.iga--;
+        }
 
-
-    // okay to swipe left
-    let xdir = 0;
-
-    if (diffX < 0) {
-        xdir = -1;
-    } else {
-        xdir = 1;
+        // check bounds
+        if (this.iga < 0) {
+            // no change
+            this.iga = 0;
+        } else if (this.iga > 4) {
+            // no change
+            this.iga = 4;
+        } else {
+            // okay to swipe up or down
+            let ydir = 0;
+            if (diffY < 0) {
+                ydir = -1;
+            } else {
+                ydir = 1;
+            }
+            // update x values
+            for (let i = 0; i < 5; i++) {
+                this.ys[i] += (this.incY * ydir);
+            }
+        }
     }
-    for (let i = 0; i < 6; i++) {
-        this.xs[i] += (this.incX * xdir);
-    }
-    console.log(this.xs);
 
     // load photo at 0,0
     let j = 0;
@@ -121,14 +149,4 @@ gameScene.nav = function (dx, dy) {
             j++;
         }
     }
-
-
-    // update nav
-    /*  
-     if (this.fitz < 2) {
-         this.l_btn.visible = false;
-     }
-     if (this.fitz > 5) {
-         this.r_btn.visible = false;
-     } */
 }
