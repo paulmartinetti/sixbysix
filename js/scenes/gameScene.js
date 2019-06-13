@@ -7,8 +7,8 @@ gameScene.init = function () {
     this.gameW = this.sys.game.config.width;
     this.gameH = this.sys.game.config.height;
 
-    this.iga = 2;
-    this.fitz = 3;
+    this.iga = 0;
+    this.fitz = 1;
 
     this.incX = 1440;
     this.incY = 900;
@@ -22,6 +22,10 @@ gameScene.init = function () {
     this.endX = 0;
     this.endY = 0;
 
+    this.swipemin = 200;
+
+    this.ready = false;
+
 };
 
 // executed once, after assets were loaded
@@ -29,12 +33,11 @@ gameScene.create = function () {
 
     // create starting x and y coordinate arrays
     for (let vy = 0; vy < 5; vy++) {
-        this.xs.push(this.incY * vy);
+        this.ys.push(this.incY * vy);
     }
     for (let vx = 0; vx < 6; vx++) {
-        this.ys.push(this.incX * vx);
+        this.xs.push(this.incX * vx);
     }
-    //console.log(this.xs, this.ys);
 
     // position all 30 images using start coordinates
     for (let iga = 0; iga < 5; iga++) {
@@ -42,7 +45,7 @@ gameScene.create = function () {
             // get loaded and named image, e.g. p10
             let imagename = 'p' + (fitz + 1) + iga;
             // add to stage using coordinate arrays
-            let temp = this.add.sprite(this.xs[iga], this.ys[fitz], imagename, 0).setOrigin(0, 0).setInteractive();
+            let temp = this.add.sprite(this.xs[fitz], this.ys[iga], imagename, 0).setOrigin(0, 0).setInteractive();
             temp.on('pointerdown', function (pointer) {
                 this.startX = Math.round(pointer.downX);
                 this.startY = Math.round(pointer.downY);
@@ -55,16 +58,65 @@ gameScene.create = function () {
         }
     }
 };
+// called on pointerup
 gameScene.nav = function (dx, dy) {
-    console.log(dx-this.startX, dy-this.startY);
+
+    if (!this.ready) {
+        this.ready = true;
+        return;
+    }
+
+    /*** check bounds and update x  ***/
+
+    // confirm purposeful swipe
+    let diffX = dx - this.startX;
+
+    if (Math.abs(diffX) < this.swipemin) {
+        return;
+    }
+
+    diffX < 0 ? this.fitz++ : this.fitz--;
+
+    // check bounds
+    if (this.fitz < 1) {
+        this.fitz = 1;
+        return;
+    }
+    if (this.fitz > 6) {
+        this.fitz = 6;
+        return;
+    }
+
+
+    // okay to swipe left
+    let xdir = 0;
+
+    if (diffX < 0) {
+        xdir = -1;
+    } else {
+        xdir = 1;
+    }
+    for (let i = 0; i < 6; i++) {
+        this.xs[i] += (this.incX * xdir);
+    }
+
+    // load photo at 0,0
+    let j = 0;
+    for (let iga = 0; iga < 5; iga++) {
+        for (let fitz = 0; fitz < 6; fitz++) {
+            if (this.xs[fitz] == 0 && this.ys[iga] == 0) {
+                // get loaded and named image, e.g. p10
+                let imagename = this.photos[j];
+                imagename.x = imagename.y = 0;
+                return;
+            }
+            j++;
+        }
+    }
+
 
     // update nav
-    /*  if (this.iga < 1) {
-         this.t_btn.visible = false;
-     }
-     if (this.iga > 3) {
-         this.b_btn.visible = false;
-     }
+    /*  
      if (this.fitz < 2) {
          this.l_btn.visible = false;
      }
