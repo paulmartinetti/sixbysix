@@ -140,7 +140,7 @@ gameScene.nav = function (dx, dy) {
             } else {
                 ydir = 1;
             }
-            // update x values
+            // update y values
             for (let i = 0; i < 5; i++) {
                 this.ys[i] += (this.incY * ydir);
             }
