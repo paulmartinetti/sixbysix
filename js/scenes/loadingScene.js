@@ -47,6 +47,16 @@ loadingScene.preload = function () {
     this.load.image('bg', 'assets/images/bg.png');
     // btn
     this.load.image('btn', 'assets/images/btn.png');
+    // zoom
+    this.load.spritesheet('zoom','assets/images/zoom.png', {
+        frameWidth: 110,
+        frameHeight: 111,
+        startFrame: 0,
+        endFrame: 1,
+        margin: 0,
+        spacing: 0,
+        frameNum: 0
+    });
 
     // load 36 photos
     let i = 0;
@@ -54,7 +64,7 @@ loadingScene.preload = function () {
         for (let fitz = 1; fitz < 7; fitz++) {
             i++;
             if (i < 10) i = '0'+i;
-            this.load.image('p'+fitz+''+iga, 'assets/images/p10_Page_'+i+'.png');
+            this.load.image('p'+fitz+''+iga, 'assets/images/p10_Page_'+i+'.jpg');
             //console.log(i);
         }
     }

@@ -34,6 +34,10 @@ gameScene.init = function () {
     this.swipemin = 200;
     this.level = 1;
 
+    // zoom and nav controls
+    this.zoomed = false;
+    this.curPhoInd = 0;
+
     // swipe listerners otherwise start on homeScene click
     this.ready = false;
 
@@ -41,6 +45,24 @@ gameScene.init = function () {
 
 // executed once, after assets were loaded
 gameScene.create = function () {
+
+    // add zoom sprite
+    let zoom = this.add.sprite(60,this.gameH-120, 'zoom', 0).setInteractive().setDepth(500);
+    zoom.on('pointerdown', function (){
+
+        // toggle global va
+        if(!this.zoomed) {
+            this.zoomed = true;
+            zoom.setFrame(1);
+            this.photosA[this.curPhoInd].setScale(1.5);
+        } else if(this.zoomed){
+            this.zoomed = false;
+            zoom.setFrame(0);
+            let photo = this.photosA[this.curPhoInd].setScale(1);
+            photo.x = photo.y = 0;
+        }
+
+    }, this);
 
     // create starting x and y coordinate arrays
     // fitz
@@ -67,6 +89,9 @@ gameScene.create = function () {
             temp.on('pointerup', function (pointer) {
                 this.nav(Math.round(pointer.upX), Math.round(pointer.upY));
             }, this);
+            // add zoom and drag ability
+
+
             // store each to access for updates
             this.photosA.push(temp);
         }
@@ -80,6 +105,9 @@ gameScene.nav = function (dx, dy) {
         this.ready = true;
         return;
     }
+
+    // no nav if zoomed
+    if (this.zoomed) return;
 
     // confirm purposeful swipe
     let diffX = dx - this.startX;
@@ -156,6 +184,7 @@ gameScene.nav = function (dx, dy) {
             // load photo on top whose coordinates are now 0,0
             if (this.xs[fitz] == 0 && this.ys[iga] == 0) {
                 // get loaded and named image, e.g. p10
+                this.curPhoInd = j;
                 let imagename = this.photosA[j];
                 imagename.x = imagename.y = 0;
                 this.level++;
