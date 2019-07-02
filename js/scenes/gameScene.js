@@ -60,7 +60,7 @@ gameScene.create = function () {
             this.zoomed = false;
             // plus sign (+)
             zoom.setFrame(0);
-            //
+            // reset
             let photo = this.photosA[this.curPhoInd].setScale(1);
             photo.x = photo.y = 0;
         }
@@ -106,9 +106,16 @@ gameScene.create = function () {
 };
 // drag when zoomed
 gameScene.dragit = function(obj, dragX, dragY) {
-    //console.log(dragX, dragY);
+    
+    //console.log(obj.x, obj.y);
     obj.x = dragX;
     obj.y = dragY;
+
+    // bounds
+    if (obj.x < -1000) obj.x = -1000;
+    if (obj.y < -1500) obj.y = -1500;
+    if (obj.x > 0) obj.x = 0;
+    if (obj.y > 0) obj.y = 0;
 }
 
 // called on pointerup
