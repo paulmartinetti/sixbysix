@@ -13,9 +13,9 @@ gameScene.init = function () {
     this.fitz = 1;
 
     // width of one photo
-    this.incX = 1440;
+    this.incX = 1000;
     // height of one photo
-    this.incY = 900;
+    this.incY = 1500;
 
     // set of x / fitz coordinates of photo grid
     this.xs = [];
@@ -45,27 +45,6 @@ gameScene.init = function () {
 
 // executed once, after assets were loaded
 gameScene.create = function () {
-
-    // add zoom sprite (x, y, name, start frame)
-    let zoom = this.add.sprite(60,this.gameH-120, 'zoom', 0).setInteractive().setDepth(500);
-    zoom.on('pointerdown', function (){
-
-        // toggle global zoom var, scale photo
-        if(!this.zoomed) {
-            this.zoomed = true;
-            // 'ok'
-            zoom.setFrame(1);
-            this.photosA[this.curPhoInd].setScale(2);
-        } else if(this.zoomed){
-            this.zoomed = false;
-            // plus sign (+)
-            zoom.setFrame(0);
-            // reset
-            let photo = this.photosA[this.curPhoInd].setScale(1);
-            photo.x = photo.y = 0;
-        }
-
-    }, this);
 
     // create starting x and y coordinate arrays
     // fitz
@@ -103,6 +82,41 @@ gameScene.create = function () {
             this.photosA.push(temp);
         }
     }
+
+    // add zoom sprite (x, y, name, start frame)
+    let zoom = this.add.sprite(60, this.gameH - 120, 'zoom', 0).setInteractive().setDepth(500);
+    zoom.on('pointerdown', function () {
+
+        // toggle global zoom var, scale photo
+        if (!this.zoomed) {
+            this.zoomed = true;
+            // 'ok'
+            zoom.setFrame(1);
+            this.photosA[this.curPhoInd].setScale(2);
+        } else if (this.zoomed) {
+            this.zoomed = false;
+            // plus sign (+)
+            zoom.setFrame(0);
+            // reset
+            let photo = this.photosA[this.curPhoInd].setScale(1);
+            photo.x = photo.y = 0;
+        }
+
+    }, this);
+
+    // start in middle (log values to calculate)
+    // move up one
+    this.startX = 0;
+    this.startY = 0;
+    this.nav(0, 700);
+
+    this.startX = 0;
+    this.startY = 1000;
+    this.nav(0, 700);
+
+    // 
+    this.startX = 1000;
+    this.nav(380, 1000);
 };
 // drag when zoomed
 gameScene.dragit = function(obj, dragX, dragY) {
@@ -120,6 +134,9 @@ gameScene.dragit = function(obj, dragX, dragY) {
 
 // called on pointerup
 gameScene.nav = function (dx, dy) {
+
+    //console.log("startX "+this.startX, "startY"+this.startY);
+    //console.log("dx "+dx, "dy "+dy);
 
     // prevent run from homeScene click
     if (!this.ready) {
