@@ -46,18 +46,21 @@ gameScene.init = function () {
 // executed once, after assets were loaded
 gameScene.create = function () {
 
-    // add zoom sprite
+    // add zoom sprite (x, y, name, start frame)
     let zoom = this.add.sprite(60,this.gameH-120, 'zoom', 0).setInteractive().setDepth(500);
     zoom.on('pointerdown', function (){
 
-        // toggle global va
+        // toggle global zoom var, scale photo
         if(!this.zoomed) {
             this.zoomed = true;
+            // 'ok'
             zoom.setFrame(1);
-            this.photosA[this.curPhoInd].setScale(1.5);
+            this.photosA[this.curPhoInd].setScale(2);
         } else if(this.zoomed){
             this.zoomed = false;
+            // plus sign (+)
             zoom.setFrame(0);
+            //
             let photo = this.photosA[this.curPhoInd].setScale(1);
             photo.x = photo.y = 0;
         }
@@ -90,13 +93,24 @@ gameScene.create = function () {
                 this.nav(Math.round(pointer.upX), Math.round(pointer.upY));
             }, this);
             // add zoom and drag ability
-
+            this.input.setDraggable(temp);
+            this.input.on('drag', function (pointer, obj, dragX, dragY){
+                if (!this.zoomed) return;
+                this.dragit(obj, dragX, dragY);
+            }, this);
 
             // store each to access for updates
             this.photosA.push(temp);
         }
     }
 };
+// drag when zoomed
+gameScene.dragit = function(obj, dragX, dragY) {
+    //console.log(dragX, dragY);
+    obj.x = dragX;
+    obj.y = dragY;
+}
+
 // called on pointerup
 gameScene.nav = function (dx, dy) {
 
@@ -184,11 +198,12 @@ gameScene.nav = function (dx, dy) {
             // load photo on top whose coordinates are now 0,0
             if (this.xs[fitz] == 0 && this.ys[iga] == 0) {
                 // get loaded and named image, e.g. p10
-                this.curPhoInd = j;
                 let imagename = this.photosA[j];
                 imagename.x = imagename.y = 0;
                 this.level++;
                 imagename.setDepth(this.level);
+                // update global photo index for zoom fn
+                this.curPhoInd = j;
                 return;
             }
             // photos are stored linearly, one row at a time
