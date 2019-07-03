@@ -38,16 +38,13 @@ gameScene.init = function () {
     this.zoomed = false;
     this.curPhoInd = 0;
 
-    // swipe listerners otherwise start on homeScene click
-    this.ready = false;
-
 };
 
 // executed once, after assets were loaded
 gameScene.create = function () {
 
     // create starting x and y coordinate arrays
-    // fitz
+    // fitz - start w fitz 3
     for (let vx = 0; vx < 6; vx++) {
         this.xs.push(this.incX * vx);
     }
@@ -105,44 +102,20 @@ gameScene.create = function () {
     }, this);
 
     // start in middle (log values to calculate)
-    // move up one
-    this.startX = 0;
-    this.startY = 0;
-    this.nav(0, 700);
-
+    // move angular twice
     this.startX = 0;
     this.startY = 1000;
     this.nav(0, 700);
-
-    // 
+ 
     this.startX = 1000;
     this.nav(380, 1000);
 };
-// drag when zoomed
-gameScene.dragit = function(obj, dragX, dragY) {
-    
-    //console.log(obj.x, obj.y);
-    obj.x = dragX;
-    obj.y = dragY;
-
-    // bounds
-    if (obj.x < -1000) obj.x = -1000;
-    if (obj.y < -1500) obj.y = -1500;
-    if (obj.x > 0) obj.x = 0;
-    if (obj.y > 0) obj.y = 0;
-}
 
 // called on pointerup
 gameScene.nav = function (dx, dy) {
 
     //console.log("startX "+this.startX, "startY"+this.startY);
     //console.log("dx "+dx, "dy "+dy);
-
-    // prevent run from homeScene click
-    if (!this.ready) {
-        this.ready = true;
-        return;
-    }
 
     // no nav if zoomed
     if (this.zoomed) return;
@@ -234,4 +207,18 @@ gameScene.nav = function (dx, dy) {
             j++;
         }
     }
+}
+
+// drag when zoomed
+gameScene.dragit = function (obj, dragX, dragY) {
+
+    //console.log(obj.x, obj.y);
+    obj.x = dragX;
+    obj.y = dragY;
+
+    // bounds
+    if (obj.x < -1000) obj.x = -1000;
+    if (obj.y < -1500) obj.y = -1500;
+    if (obj.x > 0) obj.x = 0;
+    if (obj.y > 0) obj.y = 0;
 }
