@@ -89,7 +89,10 @@ gameScene.create = function () {
             this.zoomed = true;
             // 'ok'
             zoom.setFrame(1);
-            this.photosA[this.curPhoInd].setScale(2);
+            // position
+            let photo = this.photosA[this.curPhoInd].setScale(2);
+            photo.x = -500;
+            photo.y = -750;
         } else if (this.zoomed) {
             this.zoomed = false;
             // plus sign (+)
@@ -100,22 +103,14 @@ gameScene.create = function () {
         }
 
     }, this);
-
-    // start in middle (log values to calculate)
-    // move angular twice
-    this.startX = 0;
-    this.startY = 1000;
-    this.nav(0, 700);
  
-    this.startX = 1000;
-    this.nav(380, 1000);
 };
 
 // called on pointerup
 gameScene.nav = function (dx, dy) {
 
-    //console.log("startX "+this.startX, "startY"+this.startY);
-    //console.log("dx "+dx, "dy "+dy);
+    console.log("startX "+this.startX, "startY"+this.startY);
+    console.log("dx "+dx, "dy "+dy);
 
     // no nav if zoomed
     if (this.zoomed) return;
@@ -185,7 +180,7 @@ gameScene.nav = function (dx, dy) {
             }
         }
     }
-
+    console.log(this.fitz, this.iga);
     // ready to update photo based on swipe
     let j = 0;
     // next row
@@ -222,3 +217,5 @@ gameScene.dragit = function (obj, dragX, dragY) {
     if (obj.x > 0) obj.x = 0;
     if (obj.y > 0) obj.y = 0;
 }
+
+// no code here, doesn't run
