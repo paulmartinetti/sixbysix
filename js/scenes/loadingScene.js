@@ -47,6 +47,8 @@ loadingScene.preload = function () {
     this.load.image('bg', 'assets/images/bg.png');
     // btn
     this.load.image('btn', 'assets/images/btn.png');
+    // nav key
+    this.load.image('navKey', 'assets/images/navKey.png');
     // zoom
     this.load.spritesheet('zoom','assets/images/zoom.png', {
         frameWidth: 110,

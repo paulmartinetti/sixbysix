@@ -43,6 +43,9 @@ gameScene.init = function () {
 // executed once, after assets were loaded
 gameScene.create = function () {
 
+    // nav key
+    this.add.sprite(5,5,'navKey').setOrigin(0,0).setDepth(500).setScale(2);
+
     // create starting x and y coordinate arrays
     // fitz - start w fitz 3
     for (let vx = 0; vx < 6; vx++) {
@@ -103,7 +106,8 @@ gameScene.create = function () {
         }
 
     }, this);
- 
+
+    // to start in the middle of the grid, have to use update() and limit
 };
 
 // called on pointerup
@@ -150,7 +154,7 @@ gameScene.nav = function (dx, dy) {
             }
         }
     }
-
+    //console.log("diffX "+diffX, "diffY "+diffY);
     // vertical swipe
     if (Math.abs(diffY) > this.swipemin) {
         if (diffY < 0) {
@@ -180,7 +184,7 @@ gameScene.nav = function (dx, dy) {
             }
         }
     }
-    console.log(this.fitz, this.iga);
+    //console.log(this.fitz, this.iga);
     // ready to update photo based on swipe
     let j = 0;
     // next row
