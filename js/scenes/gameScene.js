@@ -37,6 +37,11 @@ gameScene.init = function () {
     // zoom and nav controls
     this.zoomed = false;
     this.curPhoInd = 0;
+    this.textStyleObj = {
+        font: '34px Arial',
+        fill: '#ffffff'
+    }
+
 
 };
 
@@ -44,7 +49,15 @@ gameScene.init = function () {
 gameScene.create = function () {
 
     // nav key
-    this.add.sprite(5,5,'navKey').setOrigin(0,0).setDepth(500).setScale(2);
+    this.add.text(50, 5, '1  Fitzpatrick  6', this.textStyleObj).setDepth(500);
+    this.igaKey = this.add.text(50, 40, '0  IGA  4', this.textStyleObj).setDepth(500);
+    this.igaKey.angle = 90;
+
+    // heads up display
+    this.igaText = this.add.text(750, 20, 'IGA: ', this.textStyleObj);
+    this.igaText.setDepth(500);
+    this.fitzText = this.add.text(750, 60, 'Fitzpatrick: ', this.textStyleObj);
+    this.fitzText.setDepth(500);
 
     // create starting x and y coordinate arrays
     // fitz - start w fitz 3
@@ -73,7 +86,7 @@ gameScene.create = function () {
             }, this);
             // add zoom and drag ability
             this.input.setDraggable(temp);
-            this.input.on('drag', function (pointer, obj, dragX, dragY){
+            this.input.on('drag', function (pointer, obj, dragX, dragY) {
                 if (!this.zoomed) return;
                 this.dragit(obj, dragX, dragY);
             }, this);
@@ -113,8 +126,8 @@ gameScene.create = function () {
 // called on pointerup
 gameScene.nav = function (dx, dy) {
 
-    console.log("startX "+this.startX, "startY"+this.startY);
-    console.log("dx "+dx, "dy "+dy);
+    console.log("startX " + this.startX, "startY" + this.startY);
+    console.log("dx " + dx, "dy " + dy);
 
     // no nav if zoomed
     if (this.zoomed) return;
@@ -185,6 +198,9 @@ gameScene.nav = function (dx, dy) {
         }
     }
     //console.log(this.fitz, this.iga);
+    // update dynamic text
+    this.igaText.setText('IGA: ' + this.iga);
+    this.fitzText.setText('Fitzpatrick: ' + this.fitz);
     // ready to update photo based on swipe
     let j = 0;
     // next row
